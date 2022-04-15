@@ -70,7 +70,17 @@ M.plugins = {
     },
     esc_insertmode_timeout = 300,
     lspconfig = {
-      servers = { "tsserver", "tailwindcss", "eslint" },
+      servers = {
+        tsserver = true,  -- npm i -g typescript typescript-language-server
+        eslint = true,  -- npm i -g vscode-langservers-extracted
+        cssls = true, -- npm i -g vscode-langservers-extracted
+        emmet_ls = true, -- npm i -g emmet-ls
+        stylelint_lsp = true, -- npm i -g stylelint-lsp
+      },
+      filetypes = {
+        emmet_ls = { "html", "javascriptreact", "typescriptreact" },
+        stylelint_lsp = { "css", "less", "scss", "sugarss", "wxss" },
+      },
     },
     luasnip = {
       snippet_path = {},
@@ -103,8 +113,8 @@ M.mappings = {
     line_number_toggle = "<leader>n",
     new_buffer = "<S-b>",
     new_tabpage = "<S-Tab>",
-    next_tabpage = ">",
-    prev_tabpage = "<",
+    next_tabpage = "<S-Right>",
+    prev_tabpage = "<S-Left>",
     close_tabpage = "<leader>c",
     split_horizontal = "<C-x>",
     split_vertical = "<C-y>",
@@ -112,6 +122,8 @@ M.mappings = {
     window_resize_down = "<C-Down>",
     window_resize_left = "<C-Left>",
     window_resize_right = "<C-Right>",
+    move_line_up = "<S-Up>",
+    move_line_down = "<S-Down>",
   },
 
   -- navigation in insert mode, only if enabled in options
@@ -147,10 +159,8 @@ M.mappings = {
 -- To disable a mapping, equate the variable to "" or false or nil
 M.mappings.plugins = {
   bufferline = {
-    next_buffer = ")",
-    prev_buffer = "(",
-    buffer_move_right = "+",
-    buffer_move_left = "_",
+    next_buffer = ">",
+    prev_buffer = "<",
   },
 
   comment = {

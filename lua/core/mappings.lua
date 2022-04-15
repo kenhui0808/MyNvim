@@ -80,27 +80,36 @@ M.misc = function()
   end
 
   local function required_mappings()
-    map("n", maps.misc.close_buffer, ":lua require('core.utils').close_buffer() <CR>") -- close buffer
-    map("n", maps.misc.close_window, ":lua require('core.utils').close_window() <CR>") -- close window
+    map("n", maps.misc.close_buffer, ":lua require('core.utils').close_buffer() <CR>")
+    map("n", maps.misc.close_window, ":lua require('core.utils').close_window() <CR>")
     map("v", maps.misc.cp_selection, "\"*y <CR>")
-    map("n", maps.misc.cp_whole_file, ":%y+ <CR>") -- copy whole file content
+    map("n", maps.misc.cp_whole_file, ":%y+ <CR>")
     map("n", maps.misc.line_number_toggle, ":set nu! <CR>")
 
-    map("n", maps.misc.new_buffer, ":enew <CR>") -- new buffer
-    map("n", maps.misc.new_tabpage, ":tabnew <CR>") -- new tabs
+    map("n", maps.misc.new_buffer, ":enew <CR>")
+    map("n", maps.misc.new_tabpage, ":tabnew <CR>")
 
-    map("n", maps.misc.next_tabpage, ":tabn <CR>") -- next tabpage
-    map("n", maps.misc.prev_tabpage, ":tabp <CR>") -- next tabpage
-    map("n", maps.misc.close_tabpage, ":tabc <CR>") -- next tabpage
+    map("n", maps.misc.next_tabpage, ":tabn <CR>")
+    map("n", maps.misc.prev_tabpage, ":tabp <CR>")
+    map("n", maps.misc.close_tabpage, ":tabc <CR>")
 
-    map("n", maps.misc.split_horizontal, ":sp | enew <CR>") -- split horizontal
-    map("n", maps.misc.split_vertical, ":vsp | enew <CR>") -- split vertical
+    map("n", maps.misc.split_horizontal, ":sp | enew <CR>")
+    map("n", maps.misc.split_vertical, ":vsp | enew <CR>")
   
     -- window resize --
-    map("n", maps.misc.window_resize_up, ":resize -1<CR>") -- new tabs
-    map("n", maps.misc.window_resize_down, ":resize +1<CR>") -- new tabs
-    map("n", maps.misc.window_resize_left, ":vertical resize -1<CR>") -- new tabs
-    map("n", maps.misc.window_resize_right, ":vertical resize +1<CR>") -- new tabs
+    map("n", maps.misc.window_resize_up, ":resize -1<CR>")
+    map("n", maps.misc.window_resize_down, ":resize +1<CR>")
+    map("n", maps.misc.window_resize_left, ":vertical resize -1<CR>")
+    map("n", maps.misc.window_resize_right, ":vertical resize +1<CR>")
+
+    map("n", maps.misc.move_line_down, ":m+1<CR>")
+    map("n", maps.misc.move_line_up, ":m-2<CR>")
+    map("i", maps.misc.move_line_up, "<Esc>:m-2<CR>")
+    map("i", maps.misc.move_line_down, "<Esc>:m+<CR>")
+
+    -- https://vim.fandom.com/wiki/Moving_lines_up_or_down
+    map("v", maps.misc.move_line_up, ":m '<-2<CR>gv=gv")
+    map("v", maps.misc.move_line_down, ":m '>+1<CR>gv=gv")
 
     -- terminal mappings --
     local term_maps = maps.terminal
@@ -129,8 +138,8 @@ M.bufferline = function()
   map("n", m.next_buffer, ":BufferLineCycleNext <CR>")
   map("n", m.prev_buffer, ":BufferLineCyclePrev <CR>")
 
-  map("n", m.buffer_move_right, ":BufferLineMoveNext <CR>")
-  map("n", m.buffer_move_left, ":BufferLineMovePrev <CR>")
+  -- map("n", m.buffer_move_right, ":BufferLineMoveNext <CR>")
+  -- map("n", m.buffer_move_left, ":BufferLineMovePrev <CR>")
 end
 
 M.comment = function()

@@ -21,15 +21,22 @@ local function setup_lsp(attach, capabilities)
 
   -- lspservers with core/configs
   local servers = require("core.configs").plugins.options.lspconfig.servers
+  local filetypes = require("core.configs").plugins.options.lspconfig.filetypes
 
-  for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
-      on_attach = attach,
-      capabilities = capabilities,
-      flags = {
-        debounce_text_changes = 150,
-      },
-    }
+  for lsp, status in pairs(servers) do
+    if status then
+      local configs = {
+        on_attach = attach,
+        capabilities = capabilities,
+        flags = {
+          debounce_text_changes = 150,
+        },
+      }
+      if filetypes[lsp] then
+        configs.filetypes = filetypes[lsp]
+      end
+      lspconfig[lsp].setup(configs)
+    end
   end
 end
 
