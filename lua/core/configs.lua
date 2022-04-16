@@ -15,7 +15,7 @@ M.options = {
   relativenumber = false,
   expandtab = true,
   shiftwidth = 2,
-  smartindent = false,
+  smartindent = true,
   tabstop = 2,
   timeoutlen = 400,
   updatetime = 500,
@@ -161,6 +161,9 @@ M.mappings.plugins = {
   bufferline = {
     next_buffer = ">",
     prev_buffer = "<",
+
+    buffer_move_left = "_",
+    buffer_move_right = "+",
   },
 
   comment = {

@@ -27,7 +27,7 @@ local M = {}
 M.misc = function()
   local function non_config_mappings()
     -- Don't copy the replaced text after pasting in visual mode
-    map_wrapper("v", "p", "p:let @+=@0<CR>")
+    map_wrapper("v", "p", "p:let @+=@0 <CR>")
 
     -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
@@ -97,19 +97,15 @@ M.misc = function()
     map("n", maps.misc.split_vertical, ":vsp | enew <CR>")
   
     -- window resize --
-    map("n", maps.misc.window_resize_up, ":resize -1<CR>")
-    map("n", maps.misc.window_resize_down, ":resize +1<CR>")
-    map("n", maps.misc.window_resize_left, ":vertical resize -1<CR>")
-    map("n", maps.misc.window_resize_right, ":vertical resize +1<CR>")
+    map("n", maps.misc.window_resize_up, ":resize -1 <CR>")
+    map("n", maps.misc.window_resize_down, ":resize +1 <CR>")
+    map("n", maps.misc.window_resize_left, ":vertical resize -1 <CR>")
+    map("n", maps.misc.window_resize_right, ":vertical resize +1 <CR>")
 
-    map("n", maps.misc.move_line_down, ":m+1<CR>")
-    map("n", maps.misc.move_line_up, ":m-2<CR>")
-    map("i", maps.misc.move_line_up, "<Esc>:m-2<CR>")
-    map("i", maps.misc.move_line_down, "<Esc>:m+<CR>")
-
-    -- https://vim.fandom.com/wiki/Moving_lines_up_or_down
-    map("v", maps.misc.move_line_up, ":m '<-2<CR>gv=gv")
-    map("v", maps.misc.move_line_down, ":m '>+1<CR>gv=gv")
+    map("n", maps.misc.move_line_up, ":lua require('core.utils').move_line(-1) <CR>")
+    map("n", maps.misc.move_line_down, ":lua require('core.utils').move_line(1) <CR>")
+    map("v", maps.misc.move_line_up, ":lua require('core.utils').move_block(-1) <CR>")
+    map("v", maps.misc.move_line_down, ":lua require('core.utils').move_block(1) <CR>")
 
     -- terminal mappings --
     local term_maps = maps.terminal
@@ -138,33 +134,33 @@ M.bufferline = function()
   map("n", m.next_buffer, ":BufferLineCycleNext <CR>")
   map("n", m.prev_buffer, ":BufferLineCyclePrev <CR>")
 
-  -- map("n", m.buffer_move_right, ":BufferLineMoveNext <CR>")
-  -- map("n", m.buffer_move_left, ":BufferLineMovePrev <CR>")
+  map("n", m.buffer_move_right, ":BufferLineMoveNext <CR>")
+  map("n", m.buffer_move_left, ":BufferLineMovePrev <CR>")
 end
 
 M.comment = function()
   local m = plugin_maps.comment.toggle
-  map("n", m, ":lua require('Comment.api').toggle_current_linewise()<CR>")
-  map("v", m, ":lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode())<CR>")
+  map("n", m, ":lua require('Comment.api').toggle_current_linewise() <CR>")
+  map("v", m, ":lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode()) <CR>")
 end
 
 M.lspconfig = function()
   local m = plugin_maps.lspconfig
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  map("n", m.declaration, "<cmd>lua vim.lsp.buf.declaration()<CR>")
-  map("n", m.definition, "<cmd>lua vim.lsp.buf.definition()<CR>")
-  map("n", m.hover, "<cmd>lua vim.lsp.buf.hover()<CR>")
-  map("n", m.implementation, "<cmd>lua vim.lsp.buf.implementation()<CR>")
-  map("n", m.signature_help, "<cmd>lua vim.lsp.buf.signature_help()<CR>")
-  map("n", m.type_definition, "<cmd>lua vim.lsp.buf.type_definition()<CR>")
-  map("n", m.rename, "<cmd>lua vim.lsp.buf.rename()<CR>")
-  map("n", m.references, "<cmd>lua vim.lsp.buf.references()<CR>")
-  map("n", m.float_diagnostics, "<cmd>lua vim.diagnostic.open_float()<CR>")
-  map("n", m.goto_prev, "<cmd>lua vim.diagnostic.goto_prev()<CR>")
-  map("n", m.goto_next, "<cmd>lua vim.diagnostic.goto_next()<CR>")
-  map("n", m.formatting, "<cmd>lua vim.lsp.buf.formatting()<CR>")
-  map("v", m.formatting, "<cmd>lua vim.lsp.buf.formatting()<CR>")
+  map("n", m.declaration, "<cmd>lua vim.lsp.buf.declaration() <CR>")
+  map("n", m.definition, "<cmd>lua vim.lsp.buf.definition() <CR>")
+  map("n", m.hover, "<cmd>lua vim.lsp.buf.hover() <CR>")
+  map("n", m.implementation, "<cmd>lua vim.lsp.buf.implementation() <CR>")
+  map("n", m.signature_help, "<cmd>lua vim.lsp.buf.signature_help() <CR>")
+  map("n", m.type_definition, "<cmd>lua vim.lsp.buf.type_definition() <CR>")
+  map("n", m.rename, "<cmd>lua vim.lsp.buf.rename() <CR>")
+  map("n", m.references, "<cmd>lua vim.lsp.buf.references() <CR>")
+  map("n", m.float_diagnostics, "<cmd>lua vim.diagnostic.open_float() <CR>")
+  map("n", m.goto_prev, "<cmd>lua vim.diagnostic.goto_prev() <CR>")
+  map("n", m.goto_next, "<cmd>lua vim.diagnostic.goto_next() <CR>")
+  map("n", m.formatting, "<cmd>lua vim.lsp.buf.formatting() <CR>")
+  map("v", m.formatting, "<cmd>lua vim.lsp.buf.formatting() <CR>")
 end
 
 M.nvimtree = function()

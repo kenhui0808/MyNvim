@@ -6,7 +6,7 @@ M.close_window = function()
   local wins = vim.fn.gettabinfo(vim.fn.tabpagenr())[1].windows
 
   if #wins > 2 then
-    vim.cmd("close")
+    cmd("close")
     return
   end
 
@@ -14,86 +14,71 @@ M.close_window = function()
     for _, win in ipairs(wins) do
       local buf = vim.fn.getwininfo(win)[1].bufnr
       if vim.fn.getbufvar(buf, "&filetype") == "NvimTree" then
-        -- ignore if NvimTree is showing
         return
       end
     end
-    vim.cmd("close")
+    cmd("close")
   end
 end
 
-M.close_buffer = function()
-  -- Check if is a terminal buffer
-  local function is_terminal_buf(buf)
-    if vim.fn.getbufvar(buf, "&buftype") == "terminal" then
-      return true
-    else
-      return false
+-- Switch to buffer 'buf' on each tabpage each window from list 'windows'
+local function switch_buffer(windows, buf)
+  local cur_tab = vim.fn.tabpagenr()
+  local cur_win = vim.fn.winnr()
+  for _, winid in ipairs(windows) do
+    winid = tonumber(winid) or 0
+    if winid > 0 then
+      local tabwin = vim.fn.win_id2tabwin(winid)
+      local tab = tonumber(tabwin[1])
+      local win = tonumber(tabwin[2])
+      cmd(string.format("tabn %d", tab))
+      cmd(string.format("%d wincmd w", win))
+      cmd(string.format("buffer %d", buf))
     end
   end
+  -- return to original window
+  cmd(string.format("tabn %d", cur_tab))
+  cmd(string.format("%d wincmd w", cur_win))
+end
 
-  -- Switch to buffer 'buf' on each tabpage each window from list 'windows'
-  local function switch_buffer(windows, buf)
-    local cur_tab = vim.fn.tabpagenr()
-    local cur_win = vim.fn.winnr()
-    for _, winid in ipairs(windows) do
-      winid = tonumber(winid) or 0
-      if winid > 0 then
-        local tabwin = vim.fn.win_id2tabwin(winid)
-        local tab = tonumber(tabwin[1])
-        local win = tonumber(tabwin[2])
-        vim.cmd(string.format("tabn %d", tab))
-        vim.cmd(string.format("%d wincmd w", win))
-        vim.cmd(string.format("buffer %d", buf))
-      end
-    end
-    -- return to original window
-    vim.cmd(string.format("tabn %d", cur_tab))
-    vim.cmd(string.format("%d wincmd w", cur_win))
+M.close_buffer = function()
+  local present, buffers = pcall(require, 'bufferline.buffers')
+  if not present then
+    return 
+  end
+
+  local state = require('bufferline.state')
+  local components = buffers.get_components(state)
+
+  if #components <= 1 then
+    return
   end
 
   local cur_buf = vim.fn.bufnr()
 
-  if vim.fn.buflisted(cur_buf) == 0 then
-    -- ignore nobl buffer
+  local exists = false
+  for _, component in ipairs(components) do
+    if component.id == cur_buf then
+      exists = true
+      break
+    end
+  end
+
+  if not exists then
     return
   end
 
-  if is_terminal_buf(cur_buf) then
-    for buf = 1, vim.fn.bufnr("$") do
-      if not is_terminal_buf(buf) and  vim.fn.buflisted(buf) == 1 then
-        vim.cmd(string.format("buffer %d", buf))
-        return
-      end
-    end
-    vim.cmd("enew")
-    return
-  end
- 
   local wins = vim.fn.getbufinfo(cur_buf)[1].windows
-  local bufs = vim.fn.getbufinfo({ buflisted = 1 })
 
-  local buf_count = 0
-  for _, buf in ipairs(bufs) do
-    if not is_terminal_buf(buf.bufnr) then
-      buf_count = buf_count + 1
-    end
-  end
-
-  if buf_count <= 1 then
-    -- ignore last buffer
-    return
-  end
-
-  if cur_buf == bufs[#bufs].bufnr then
-    vim.cmd("BufferLineCyclePrev")
+  if cur_buf == components[#components].id then
+    cmd("BufferLineCyclePrev")
   else
-    vim.cmd("BufferLineCycleNext")
+    cmd("BufferLineCycleNext")
   end
 
   local switch_buf = vim.fn.bufnr()
   switch_buffer(wins, switch_buf)
-  vim.cmd(string.format("silent! confirm bd %d", cur_buf))
+  cmd(string.format("silent! confirm bd %d", cur_buf))
 end
 
 M.map = function(mode, keys, command, opt)
@@ -206,6 +191,93 @@ M.label_plugins = function(plugins)
     plugins_labeled[plugin[1]] = plugin
   end
   return plugins_labeled
+end
+
+-- Desc:
+--    Moves up or down the current cursor line
+--    mantaining the cursor over the line
+-- Parameter:
+--    dir -> Movement direction (-1, +1)
+M.move_line = function(dir)
+  if dir == nil then
+    error('Missing offset', 3)
+  end
+
+  -- Get the last line of current buffer
+  local last_row = vim.fn.line('$')
+
+  -- Get current cursor row
+  local current_row = vim.api.nvim_win_get_cursor(0)[1]
+
+  if current_row < 1 or current_row > last_row then
+    return
+  end
+
+  -- Edges
+  if current_row == 1 and dir < 0 then
+    return
+  end
+
+  if current_row == last_row and dir > 0 then
+    return
+  end
+
+  -- Swap line
+  local source_line = vim.api.nvim_buf_get_lines(0, current_row - 1, current_row, true)
+  local target_line = vim.api.nvim_buf_get_lines(0, current_row + dir - 1, current_row + dir, true)
+
+  vim.api.nvim_buf_set_lines(0, current_row - 1, current_row, true, target_line)
+  vim.api.nvim_buf_set_lines(0, current_row + dir - 1, current_row + dir, true, source_line)
+
+  -- Set cursor position
+  local cursor_column = vim.api.nvim_win_get_cursor(0)[2]
+  vim.api.nvim_win_set_cursor(0, { current_row + dir, cursor_column })
+end
+
+-- Desc:
+--    Moves up or down a visual area
+--    mantaining the selection
+-- Parameter:
+--    dir -> Movement direction (-1, +1)
+M.move_block = function(dir)
+  local _, start_row, _, _ = unpack(vim.fn.getpos("'<"))
+  local _, end_row, _, _ = unpack(vim.fn.getpos("'>"))
+  local last_row = vim.fn.line('$')
+
+  -- Zero-based and end exclusive
+  start_row = start_row - 1
+
+  -- Edges
+  if start_row == 0 and dir < 0 then
+    cmd(':normal! '..start_row..'ggV'..(end_row)..'gg')
+    return
+  end
+
+  if end_row == last_row and dir > 0 then
+    cmd(':normal! '..(start_row + 1)..'ggV'..(end_row + dir)..'gg')
+    return
+  end
+
+  local block = vim.api.nvim_buf_get_lines(0, start_row, end_row, true)
+
+  if dir < 0 then
+    local lines = vim.api.nvim_buf_get_lines(0, start_row - 1, start_row, true)
+    table.insert(block, lines[1])
+  elseif dir > 0 then
+    local lines = vim.api.nvim_buf_get_lines(0, end_row, end_row + 1, true)
+    table.insert(block, 1, lines[1])
+  end
+
+  -- Move block
+  local target_start_row = (dir > 0 and start_row or start_row - 1)
+  local target_end_row = (dir > 0 and end_row + 1 or end_row)
+  vim.api.nvim_buf_set_lines(0, target_start_row, target_end_row, true, block)
+
+  -- Reselect block
+  local select_start_row = (dir > 0 and start_row + 2 or start_row)
+  local select_end_row = (end_row + dir)
+  cmd(':normal! \\e\\e')
+  cmd(':normal! '..select_start_row..'ggV'..select_end_row..'gg')
 end
 
 return M
