@@ -2,11 +2,18 @@ local M = {}
 
 require("plugins.configs.others").lsp_handlers()
 
-local function on_attach(client, bufnr)
-  local function buf_set_option(...)
-    vim.api.nvim_buf_set_option(bufnr, ...)
-  end
+local function buf_set_option(...)
+  vim.api.nvim_buf_set_option(bufnr, ...)
+end
 
+local function on_attach(client, bufnr)
+  -- Enable completion triggered by <c-x><c-o>
+  buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+  require("core.mappings").lspconfig()
+end
+
+local function on_attach_enable_formatting(client, bufnr)
+  -- Enable formatting
   client.resolved_capabilities.document_formatting = true
   client.resolved_capabilities.document_range_formatting = true
 
@@ -16,15 +23,21 @@ local function on_attach(client, bufnr)
   require("core.mappings").lspconfig()
 end
 
-local function setup_lsp(attach, capabilities)
+local function setup_lsp(capabilities)
   local lspconfig = require "lspconfig"
 
   -- lspservers with core/configs
   local servers = require("core.configs").plugins.options.lspconfig.servers
+  local formatting = require("core.configs").plugins.options.lspconfig.formatting
+  local settings = require("core.configs").plugins.options.lspconfig.settings
   local filetypes = require("core.configs").plugins.options.lspconfig.filetypes
 
   for lsp, status in pairs(servers) do
     if status then
+      local attach = on_attach
+      if formatting[lsp] then
+        attach = on_attach_enable_formatting
+      end
       local configs = {
         on_attach = attach,
         capabilities = capabilities,
@@ -32,6 +45,12 @@ local function setup_lsp(attach, capabilities)
           debounce_text_changes = 150,
         },
       }
+      if settings[lsp] then
+        configs.settings = {}
+        for k, v in pairs(settings[lsp]) do
+          configs.settings[k] = v
+        end
+      end
       if filetypes[lsp] then
         configs.filetypes = filetypes[lsp]
       end
@@ -57,6 +76,6 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   },
 }
 
-setup_lsp(on_attach, capabilities)
+setup_lsp(capabilities)
 
 return M

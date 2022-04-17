@@ -70,12 +70,26 @@ M.plugins = {
     },
     esc_insertmode_timeout = 300,
     lspconfig = {
+      -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
       servers = {
         tsserver = true,  -- npm i -g typescript typescript-language-server
         eslint = true,  -- npm i -g vscode-langservers-extracted
+        html = true, -- npm i -g vscode-langservers-extracted
         cssls = true, -- npm i -g vscode-langservers-extracted
+        jsonls = true, -- npm i -g vscode-langservers-extracted
         emmet_ls = true, -- npm i -g emmet-ls
         stylelint_lsp = true, -- npm i -g stylelint-lsp
+      },
+      formatting = {
+        tsserver = true,
+        stylelint_lsp = true,
+      },
+      settings = {
+        stylelint_lsp = {
+          stylelintplus = {
+            autoFixOnFormat = true,
+          },
+        },
       },
       filetypes = {
         emmet_ls = { "html", "javascriptreact", "typescriptreact" },
