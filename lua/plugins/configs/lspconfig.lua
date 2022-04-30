@@ -2,13 +2,9 @@ local M = {}
 
 require("plugins.configs.others").lsp_handlers()
 
-local function buf_set_option(...)
-  vim.api.nvim_buf_set_option(bufnr, ...)
-end
-
 local function on_attach(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
-  buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+  vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
   require("core.mappings").lspconfig()
 end
 
@@ -18,7 +14,7 @@ local function on_attach_enable_formatting(client, bufnr)
   client.resolved_capabilities.document_range_formatting = true
 
   -- Enable completion triggered by <c-x><c-o>
-  buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+  vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
   require("core.mappings").lspconfig()
 end
