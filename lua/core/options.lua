@@ -6,6 +6,7 @@ local options = require("core.configs").options
 opt.title = true
 opt.clipboard = options.clipboard
 opt.cmdheight = options.cmdheight
+opt.showcmd = false
 opt.cul = true -- cursor line
 
 -- Indentline

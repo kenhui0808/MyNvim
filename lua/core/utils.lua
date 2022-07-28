@@ -168,13 +168,9 @@ end
 
 -- Config of a plugin based on the path provided in the plugins/configs
 -- Arguments:
---  1st - name of plugin
---  2nd - default config path
---  3rd - optional function name which will called from default_config path
---  e.g: if given args - "telescope", "plugins.configs.telescope", "setup"
---      then return "require('plugins.configs.telescope').setup()"
---      if 3rd arg not given, then return "require('plugins.configs.telescope')"
-M.config_require = function(name, config_path, config_function)
+--  1st - config path
+--  2nd - optional function name which will called from config path
+M.config_require = function(config_path, config_function)
   local result = config_path
   result = "('" .. result .. "')"
   if type(config_function) == "string" and config_function ~= "" then

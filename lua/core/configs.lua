@@ -48,20 +48,20 @@ M.ui = {
 
 M.plugins = {
   -- enable/disable plugins (false for disable)
-  status = {
-    autopairs = true,
-    better_escape = true, -- map to <ESC> with no lag
-    blankline = true, -- indentline stuff
-    bufferline = true, -- manage and preview opened buffers
-    cmp = true,
-    colorizer = true, -- color RGB, HEX, CSS, NAME color codes
-    comment = true, -- easily (un)comment code, language aware
-    feline = true, -- statusline
-    gitsigns = true,
-    lspsignature = true, -- lsp enhancements
-    nvimtree = true,
-    vim_matchup = true, -- improved matchit
-  },
+  -- status = {
+  --   autopairs = true,
+  --   better_escape = true, -- map to <ESC> with no lag
+  --   blankline = true, -- indentline stuff
+  --   bufferline = true, -- manage and preview opened buffers
+  --   cmp = true,
+  --   colorizer = true, -- color RGB, HEX, CSS, NAME color codes
+  --   comment = true, -- easily (un)comment code, language aware
+  --   feline = true, -- statusline
+  --   gitsigns = true,
+  --   lspsignature = true, -- lsp enhancements
+  --   nvimtree = true,
+  --   vim_matchup = true, -- improved matchit
+  -- },
 
   options = {
     autopairs = { loadAfter = "nvim-cmp" },
