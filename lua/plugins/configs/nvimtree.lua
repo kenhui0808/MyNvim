@@ -24,7 +24,6 @@ local default = {
   },
   disable_netrw = true,
   hijack_netrw = true,
-  ignore_ft_on_setup = { "dashboard" },
   open_on_tab = false,
   hijack_cursor = true,
   hijack_unnamed_buffer_when_opening = false,
@@ -36,7 +35,6 @@ local default = {
   view = {
     side = "left",
     width = 25,
-    hide_root_folder = true,
     preserve_window_proportions = true,
   },
   git = {
@@ -52,6 +50,7 @@ local default = {
     add_trailing = false,
     highlight_git = false,
     highlight_opened_files = "none",
+    root_folder_label = false,
     root_folder_modifier = table.concat { ":t:gs?$?/..", string.rep(" ", 1000), "?:gs?^??" },
     indent_markers = {
       enable = true,

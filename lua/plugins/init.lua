@@ -89,6 +89,17 @@ local plugins = {
   },
 
   {
+    "MunifTanjim/nui.nvim",
+    after = "nvim-lspconfig",
+  },
+
+  --{
+  --  "ShinKage/idris2-nvim",
+  --  after = "nui.nvim",
+  --  config = config_require("plugins.configs.idris2", "setup"),
+  --},
+
+  {
     "ray-x/lsp_signature.nvim",
     after = "nvim-lspconfig",
     config = config_require("plugins.configs.others", "signature"),

@@ -2,7 +2,7 @@ local M = {}
 
 M.options = {
   -- general nvim/vim options , check :h optionname to know more about an option
-  clipboard = "",
+  clipboard = "unnamedplus",
   cmdheight = 1,
   ruler = false,
   hidden = true,
@@ -79,6 +79,7 @@ M.plugins = {
         jsonls = true, -- npm i -g vscode-langservers-extracted
         emmet_ls = true, -- npm i -g emmet-ls
         stylelint_lsp = true, -- npm i -g stylelint-lsp
+        idris2_lsp = true,
       },
       formatting = {
         tsserver = true,
@@ -94,6 +95,7 @@ M.plugins = {
       filetypes = {
         emmet_ls = { "html", "javascriptreact", "typescriptreact" },
         stylelint_lsp = { "css", "less", "scss", "sugarss", "wxss" },
+        idris2_lsp = { "idr" },
       },
     },
     luasnip = {
