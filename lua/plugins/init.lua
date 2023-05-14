@@ -26,7 +26,8 @@ local plugins = {
   },
 
   {
-    "kyazdani42/nvim-web-devicons",
+    --"kyazdani42/nvim-web-devicons",
+    "nvim-tree/nvim-web-devicons",
     after = "nvim-base16.lua",
     config = config_require("plugins.configs.icons", "setup"),
   },

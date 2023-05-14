@@ -1,24 +1,25 @@
-local present, nvimtree = pcall(require, "nvim-tree")
+local status_ok, nvim_tree = pcall(require, "nvim-tree")
 
-if not present then
+if not status_ok then
   return
 end
 
 -- globals must be set prior to requiring nvim-tree to function
-local g = vim.g
+--local g = vim.g
 
--- g.nvim_tree_add_trailing = 0 -- append a trailing slash to folder names
--- g.nvim_tree_git_hl = 0
--- g.nvim_tree_highlight_opened_files = 0
--- g.nvim_tree_root_folder_modifier = table.concat { ":t:gs?$?/..", string.rep(" ", 1000), "?:gs?^??" }
+local function my_on_attach(bufnr)
+  local api = require('nvim-tree.api')
 
--- g.nvim_tree_show_icons = {
--- }
+  local function opts(desc)
+    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
 
--- g.nvim_tree_icons = {
--- }
+  api.config.mappings.default_on_attach(bufnr)
+  vim.keymap.set('n', '<C-y>', api.node.open.vertical, opts('Open: Vertical Split'))
+end
 
 local default = {
+  on_attach = my_on_attach,
   filters = {
     dotfiles = false,
   },
@@ -27,11 +28,7 @@ local default = {
   open_on_tab = false,
   hijack_cursor = true,
   hijack_unnamed_buffer_when_opening = false,
-  update_cwd = true,
-  update_focused_file = {
-    enable = false,
-    update_cwd = false,
-  },
+  sync_root_with_cwd = true,
   view = {
     side = "left",
     width = 25,
@@ -89,7 +86,7 @@ local default = {
 local M = {}
 
 M.setup = function()
-  nvimtree.setup(default)
+  nvim_tree.setup(default)
 end
 
 return M

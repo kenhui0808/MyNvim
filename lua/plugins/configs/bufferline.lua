@@ -27,12 +27,12 @@ default = {
     separator_style = "thin",
     always_show_bufferline = true,
     diagnostics = false,
-    custom_filter = function(buf_number)
-      if vim.fn.getbufvar(buf_number, "&buftype") == "terminal" then
-        return false
-      end
-      return true
-    end,
+    --custom_filter = function(buf_number)
+    --  if vim.fn.getbufvar(buf_number, "&buftype") == "terminal" then
+    --    return false
+    --  end
+    --  return true
+    --end,
   },
 
   highlights = {

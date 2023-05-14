@@ -32,7 +32,6 @@ M.options = {
 }
 
 ---- UI -----
-
 M.ui = {
   theme = "onebright",
   italic_comments = false,
@@ -45,24 +44,7 @@ M.ui = {
 }
 
 ---- PLUGIN OPTIONS ----
-
 M.plugins = {
-  -- enable/disable plugins (false for disable)
-  -- status = {
-  --   autopairs = true,
-  --   better_escape = true, -- map to <ESC> with no lag
-  --   blankline = true, -- indentline stuff
-  --   bufferline = true, -- manage and preview opened buffers
-  --   cmp = true,
-  --   colorizer = true, -- color RGB, HEX, CSS, NAME color codes
-  --   comment = true, -- easily (un)comment code, language aware
-  --   feline = true, -- statusline
-  --   gitsigns = true,
-  --   lspsignature = true, -- lsp enhancements
-  --   nvimtree = true,
-  --   vim_matchup = true, -- improved matchit
-  -- },
-
   options = {
     autopairs = { loadAfter = "nvim-cmp" },
     cmp = {
@@ -79,7 +61,6 @@ M.plugins = {
         jsonls = true, -- npm i -g vscode-langservers-extracted
         emmet_ls = true, -- npm i -g emmet-ls
         stylelint_lsp = true, -- npm i -g stylelint-lsp
-        idris2_lsp = true,
       },
       formatting = {
         tsserver = true,
@@ -95,7 +76,6 @@ M.plugins = {
       filetypes = {
         emmet_ls = { "html", "javascriptreact", "typescriptreact" },
         stylelint_lsp = { "css", "less", "scss", "sugarss", "wxss" },
-        idris2_lsp = { "idr" },
       },
     },
     luasnip = {
@@ -116,41 +96,42 @@ M.plugins = {
 }
 
 --- MAPPINGS ----
-
--- non plugin
 M.mappings = {
-
   -- custom user mappings
   misc = {
-    close_buffer = "<S-c>",
-    close_window = "<S-w>",
-    cp_selection = "<Leader>y", -- copy all contents of current buffer
-    cp_whole_file = "<C-a>", -- copy all contents of current buffer
     line_number_toggle = "<leader>n",
+    -- copy
+    cp_selection = "<leader>y",
+    cp_whole_file = "<leader>a",
+    -- move
+    move_line_up = "<S-Up>",
+    move_line_down = "<S-Down>",
+    -- buffer
     new_buffer = "<S-b>",
-    new_tabpage = "<S-Tab>",
-    next_tabpage = "<S-Right>",
-    prev_tabpage = "<S-Left>",
+    close_buffer = "<S-c>",
+    -- tab
+    next_tabpage = "<leader>.",
+    prev_tabpage = "<leader>,",
+    new_tabpage = "<leader>t",
     close_tabpage = "<leader>c",
+    -- window
     split_horizontal = "<C-x>",
     split_vertical = "<C-y>",
     window_resize_up = "<C-Up>",
     window_resize_down = "<C-Down>",
     window_resize_left = "<C-Left>",
     window_resize_right = "<C-Right>",
-    move_line_up = "<S-Up>",
-    move_line_down = "<S-Down>",
+    close_window = "<C-c>",
   },
 
   -- navigation in insert mode, only if enabled in options
-
   insert_nav = {
     backward = "<C-h>",
-    beginning_of_line = "<C-b>",
-    end_of_line = "<C-e>",
     forward = "<C-l>",
     next_line = "<C-k>",
     prev_line = "<C-j>",
+    beginning_of_line = "<C-b>",
+    end_of_line = "<C-e>",
   },
 
   -- better window movement
@@ -163,11 +144,10 @@ M.mappings = {
 
   -- terminal related mappings
   terminal = {
-    -- get out of terminal mode
-    esc_termmode = { "jk" },
-
     -- spawn terminals
     new_terminal = "<S-t>",
+    -- get out of terminal mode
+    esc_termmode = { "jk" },
   },
 }
 
@@ -184,11 +164,6 @@ M.mappings.plugins = {
 
   comment = {
     toggle = "<leader>/",
-  },
-
-  -- map to <ESC> with no lag
-  better_escape = { -- <ESC> will still work
-    esc_insertmode = { "jk" }, -- multiple mappings allowed
   },
 
   lspconfig = {
@@ -208,20 +183,17 @@ M.mappings.plugins = {
 
   nvimtree = {
     toggle = "<C-t>",
-    focus = "<S-f>",
+    focus = "<C-f>",
   },
 
   telescope = {
-    -- buffers = "<leader>fb",
-    buffers = "<C-b>",
-    -- find_files = "<leader>ff",
-    find_files = "<C-f>",
+    buffers = "<leader>fb",
+    find_files = "<leader>ff",
     find_hiddenfiles = "<leader>fi",
     git_commits = "<leader>gc",
     git_status = "<leader>gs",
     help_tags = "<leader>fh",
-    -- live_grep = "<leader>fw",
-    live_grep = "<C-g>",
+    live_grep = "<leader>fw",
     oldfiles = "<leader>fo",
   },
 }
